@@ -1,0 +1,64 @@
+name: CI/CD Notebook Pipeline
+
+# Запуск пайплайна при пуше или pull request в ветку main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# Разрешения для деплоя на GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Клонирование репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Установка Python
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      # 3. Установка зависимостей
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. CI: Запуск ноутбука для проверки воспроизводимости
+      - name: Execute Jupyter Notebook
+        run: |
+          jupyter nbconvert --to notebook --execute --inplace navigator_semantic_search.ipynb
+        env:
+          # Увеличиваем таймаут, так как скачивание моделей может занять время
+          JUPYTER_TIMEOUT: 600 
+
+      # 5. CD: Конвертация выполненного ноутбука в HTML
+      - name: Convert Notebook to HTML
+        run: |
+          jupyter nbconvert --to html semantic_code_search.ipynb --output index --no-input
+
+      # 6. CD: Настройка GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 7. CD: Загрузка HTML артефакта
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './index.html'
+
+      # 8. CD: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
