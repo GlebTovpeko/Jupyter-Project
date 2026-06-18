@@ -50,7 +50,7 @@ jobs:
           # Создаём папку для артефакта
           mkdir -p _site
           # Конвертируем ноутбук в HTML и сохраняем в папку _site
-          jupyter nbconvert --to html semantic_code_search.ipynb --output index --no-input --output-dir _site
+          jupyter nbconvert --to html navigator_semantic_search.ipynb --output index --no-input --output-dir _site
 
       # 6. CD: Настройка GitHub Pages
       - name: Setup Pages
