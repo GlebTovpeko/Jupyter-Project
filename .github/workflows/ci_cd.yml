@@ -38,7 +38,7 @@ jobs:
       # 4. CI: Запуск ноутбука для проверки воспроизводимости
       - name: Execute Jupyter Notebook
         run: |
-          jupyter nbconvert --to notebook --execute --inplace navigator_semantic_search.ipynb
+          jupyter nbconvert --to notebook --execute --inplace navigator_semantic_search-Copy1.ipynb
         env:
           # Увеличиваем таймаут, так как скачивание моделей может занять время
           JUPYTER_TIMEOUT: 600 
@@ -50,7 +50,7 @@ jobs:
           # Создаём папку для артефакта
           mkdir -p _site
           # Конвертируем ноутбук в HTML и сохраняем в папку _site
-          jupyter nbconvert --to html navigator_semantic_search.ipynb --output index --no-input --output-dir _site
+          jupyter nbconvert --to html navigator_semantic_search-Copy1.ipynb --output index --no-input --output-dir _site
 
       # 6. CD: Настройка GitHub Pages
       - name: Setup Pages
